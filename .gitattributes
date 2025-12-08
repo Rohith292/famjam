@@ -1,0 +1,2 @@
+backend/src/ml_scripts/model/** filter=lfs diff=lfs merge=lfs -text
+backend/src/ml_scripts/training_data.spacy filter=lfs diff=lfs merge=lfs -text
