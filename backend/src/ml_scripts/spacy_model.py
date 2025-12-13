@@ -126,7 +126,8 @@ def train_model():
             doc.cats[intent] = cats.get(intent, 0.0)
         doc_bin.add(doc)
 
-    doc_bin.to_disk("training_data.spacy")
+    BASE_DIR=os.path.dirname(os.path.abspath(__file__))
+    doc_bin.to_disk(os.path.join(BASE_DIR,"training_data.spacy"))
     docs = list(doc_bin.get_docs(nlp.vocab))
     examples = [Example.from_dict(doc, {"entities": [(ent.start_char, ent.end_char, ent.label_) for ent in doc.ents], "cats": doc.cats}) for doc in docs]
 
@@ -140,18 +141,31 @@ def train_model():
             nlp.update(batch, sgd=optimizer, losses=losses)
         print(f"Iteration {i+1} Losses: {losses}")
 
-    model_path = "D:/family-map/backend/src/ml_scripts/model/family_tree_model_v3"
-    if os.path.exists(model_path):
-        print(f"Removing old model at: {model_path}")
-        shutil.rmtree(model_path)
+    
+    BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+    MODEL_DIR = os.path.join(BASE_DIR, "model", "family_tree_model_v3")
 
-    nlp.to_disk(model_path, exclude=["parser", "tagger", "attribute_ruler", "lemmatizer", "senter"])
-    print(f"Trained model saved to {model_path}")
+    os.makedirs(os.path.dirname(MODEL_DIR),exist_ok=True)
+
+    if os.path.exists(MODEL_DIR):
+        print(f"Removing old model at: {MODEL_DIR}")
+        shutil.rmtree(MODEL_DIR)
+
+    nlp.to_disk(MODEL_DIR, exclude=["parser", "tagger", "attribute_ruler", "lemmatizer", "senter"])
+    print(f"Trained model saved to {MODEL_DIR}")
 
 def load_ner_model():
-    model_path = os.path.join(os.path.dirname(__file__), "model", "family_tree_model_v3")
-    nlp = spacy.load(model_path, exclude=["tagger", "parser", "attribute_ruler", "lemmatizer", "senter"])
-    return nlp
+    BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+    MODEL_DIR = os.path.join(BASE_DIR, "model", "family_tree_model_v3")
+
+    if not os.path.exists(MODEL_DIR):
+        raise RuntimeError(f"SpaCy model not found at {MODEL_DIR}")
+
+    return spacy.load(
+        MODEL_DIR,
+        exclude=["parser", "tagger", "attribute_ruler", "lemmatizer", "senter"]
+    )
+
 
 if __name__ == "__main__":
     train_model()

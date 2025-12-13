@@ -9,7 +9,8 @@ import datetime
 try:
     print("Script started", file=sys.stderr)
 
-    model_path = "D:/family-map/backend/src/ml_scripts/model/family_tree_model_v3"
+    BASE_DIR=os.path.dirname(os.path.abspath(__file__))
+    model_path=os.path.join(BASE_DIR,"model","family_tree_model_v3")
     
     if not os.path.exists(model_path):
         print(f"Error: Model not found at {model_path}. Please run spacy_model.py first.", file=sys.stderr)
