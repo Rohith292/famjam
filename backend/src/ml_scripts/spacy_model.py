@@ -10,7 +10,7 @@ import os
 
 def train_model():
     # Load base model
-    nlp = spacy.load("en_core_web_lg")
+    nlp = spacy.load("en_core_web_md")
 
     # Add components
     if "textcat" not in nlp.pipe_names:
