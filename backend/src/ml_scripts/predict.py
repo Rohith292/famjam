@@ -20,7 +20,8 @@ try:
     print(f"Loading model from: {model_path}", file=sys.stderr)
     print(f"Model last modified: {mod_datetime}", file=sys.stderr)
 
-    nlp = spacy.load(model_path)
+    nlp = spacy.load(model_path, exclude=["tagger", "parser", "attribute_ruler", "lemmatizer", "senter"])
+
 
     def process_query(query, context=None):
         doc = nlp(query)

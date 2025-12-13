@@ -145,12 +145,12 @@ def train_model():
         print(f"Removing old model at: {model_path}")
         shutil.rmtree(model_path)
 
-    nlp.to_disk(model_path)
+    nlp.to_disk(model_path, exclude=["parser", "tagger", "attribute_ruler", "lemmatizer", "senter"])
     print(f"Trained model saved to {model_path}")
 
 def load_ner_model():
     model_path = os.path.join(os.path.dirname(__file__), "model", "family_tree_model_v3")
-    nlp = spacy.load(model_path)
+    nlp = spacy.load(model_path, exclude=["tagger", "parser", "attribute_ruler", "lemmatizer", "senter"])
     return nlp
 
 if __name__ == "__main__":
