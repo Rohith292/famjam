@@ -1,5 +1,5 @@
 // backend/src/controllers/analytics.controller.js
-
+import axios from "axios";
 import FamilyMember from '../models/family.model.js';
 import FamilyGroup from '../models/familyGroup.model.js';
 import User from '../models/user.model.js';
@@ -9,15 +9,14 @@ import mongoose from 'mongoose';
 import Collaboration from '../models/collaboration.model.js';
 
 
-const ML_ENABLED=process.env.ML_ENABLED==='true';
+const ML_ENABLED = String(process.env.ML_ENABLED).toLowerCase() === "true";
+
 const isUserInGroup = async (userId, groupId) => {
     if (!mongoose.Types.ObjectId.isValid(groupId)) return false;
     const group = await FamilyGroup.findById(groupId);
     if (!group) return false;
     return group.members.some(memberId => memberId.toString() === userId.toString());
 };
-
-import axios from "axios";
 
 const handleChatQuery = async (req, res) => {
     const { query, context } = req.body;
@@ -30,7 +29,7 @@ const handleChatQuery = async (req, res) => {
             response:"AI insights are currently unavailable due to model deployment issues. You can still browse and manage your family map"
         })
     }
-    
+
     try {
         const flaskResponse = await axios.post(
     "http://127.0.0.1:5000/predict",
