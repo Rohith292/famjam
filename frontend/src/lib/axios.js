@@ -7,7 +7,7 @@ import axios from "axios";
 
 export const axiosInstance = axios.create({
     // Use VITE_API_URL from environment variables, fallback to localhost for dev
-    baseURL:  'http://localhost:5001/api',
+    baseURL:  'https://famjam-725r.onrender.com',
     withCredentials: true, // Essential for sending cookies (http-only cookies from the backend).
 });
 
