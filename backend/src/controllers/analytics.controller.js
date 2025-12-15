@@ -9,6 +9,7 @@ import mongoose from 'mongoose';
 import Collaboration from '../models/collaboration.model.js';
 
 
+const ML_ENABLED=process.env.ML_ENABLED==='true';
 const isUserInGroup = async (userId, groupId) => {
     if (!mongoose.Types.ObjectId.isValid(groupId)) return false;
     const group = await FamilyGroup.findById(groupId);
@@ -24,6 +25,12 @@ const handleChatQuery = async (req, res) => {
 
     console.log("Chat Hit");
 
+    if(!ML_ENABLED){
+        return res.status(200).json({
+            response:"AI insights are currently unavailable due to model deployment issues. You can still browse and manage your family map"
+        })
+    }
+    
     try {
         const flaskResponse = await axios.post(
     "http://127.0.0.1:5000/predict",
